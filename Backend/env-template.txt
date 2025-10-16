@@ -1,0 +1,17 @@
+# Supabase Configuration
+SUPABASE_URL=https://seuprojeto.supabase.co
+SUPABASE_ANON_KEY=sua-chave-anon-public
+SUPABASE_SERVICE_ROLE_KEY=sua-service-role-key
+
+# Database Configuration (opcional - para conexão direta)
+DATABASE_URL=postgresql://postgres:sua-senha@db.seuprojeto.supabase.co:5432/postgres
+
+# JWT Configuration (se usar autenticação)
+JWT_SECRET=sua-jwt-secret-key
+
+# App Configuration
+NODE_ENV=development
+PORT=3001
+
+# Outras configurações
+CORS_ORIGIN=http://localhost:3000
