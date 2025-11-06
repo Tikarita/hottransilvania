@@ -11,6 +11,7 @@ const usuarioRoutes = require('./routes/usuarioRoutes');
 const { sequelize } = require('./config/database');
 
 const app = express();
+// Render define PORT automaticamente, mas usamos 3000 como fallback
 const PORT = process.env.PORT || 3000;
 
 // Middlewares globais
