@@ -56,23 +56,38 @@ app.use('*', (req, res) => {
 // Função para inicializar o servidor
 async function startServer() {
   try {
+    console.log('🔄 Iniciando servidor...');
+    console.log('📦 Variáveis de ambiente:', {
+      NODE_ENV: process.env.NODE_ENV,
+      PORT: process.env.PORT,
+      DATABASE_URL: process.env.DATABASE_URL ? 'Configurada' : 'Não configurada',
+      DB_HOST: process.env.DB_HOST || 'Não configurado'
+    });
+
     // Testar conexão com o banco
+    console.log('🔌 Tentando conectar ao banco de dados...');
     await sequelize.authenticate();
     console.log('✅ Conexão com o banco de dados estabelecida com sucesso.');
 
     // Sincronizar modelos (criar tabelas se não existirem)
-    await sequelize.sync({ alter: true });
+    console.log('🔄 Sincronizando modelos...');
+    await sequelize.sync({ alter: false }); // Alterado para false para evitar alterações automáticas em produção
     console.log('✅ Modelos sincronizados com o banco de dados.');
 
     // Iniciar servidor
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`🚀 Servidor rodando na porta ${PORT}`);
-      console.log(`📊 Health check: http://localhost:${PORT}/health`);
-      console.log(`👥 API de usuários: http://localhost:${PORT}/api/usuarios`);
+      console.log(`📊 Health check: http://0.0.0.0:${PORT}/health`);
+      console.log(`👥 API de usuários: http://0.0.0.0:${PORT}/api/usuarios`);
     });
 
   } catch (error) {
-    console.error('❌ Erro ao inicializar servidor:', error);
+    console.error('❌ Erro ao inicializar servidor:');
+    console.error('Erro completo:', error);
+    console.error('Stack trace:', error.stack);
+    if (error.original) {
+      console.error('Erro original:', error.original);
+    }
     process.exit(1);
   }
 }

@@ -53,7 +53,16 @@ if (process.env.DATABASE_URL) {
 }
 
 // Importar modelos
-const Usuario = require('../models/Usuario')(sequelize);
+let Usuario;
+
+try {
+  const UsuarioModel = require('../models/Usuario');
+  Usuario = UsuarioModel(sequelize);
+  console.log('✅ Modelo Usuario carregado com sucesso');
+} catch (error) {
+  console.error('❌ Erro ao carregar modelo Usuario:', error);
+  throw error;
+}
 
 // Associar modelos (se houver relacionamentos futuros)
 // Usuario.hasMany(OutroModelo, { foreignKey: 'usuarioId' });
