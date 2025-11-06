@@ -58,21 +58,49 @@ async function startServer() {
   try {
     console.log('🔄 Iniciando servidor...');
     console.log('📦 Variáveis de ambiente:', {
-      NODE_ENV: process.env.NODE_ENV,
-      PORT: process.env.PORT,
-      DATABASE_URL: process.env.DATABASE_URL ? 'Configurada' : 'Não configurada',
-      DB_HOST: process.env.DB_HOST || 'Não configurado'
+      NODE_ENV: process.env.NODE_ENV || 'não definido',
+      PORT: process.env.PORT || 'não definido',
+      DATABASE_URL: process.env.DATABASE_URL ? '✅ Configurada' : '❌ Não configurada',
+      DB_HOST: process.env.DB_HOST || '❌ Não configurado',
+      DB_NAME: process.env.DB_NAME || '❌ Não configurado'
     });
+
+    // Verificar se há configuração de banco
+    if (!process.env.DATABASE_URL && !process.env.DB_HOST) {
+      console.error('❌ ERRO CRÍTICO: Nenhuma configuração de banco de dados encontrada!');
+      console.error('Por favor, configure DATABASE_URL no Render Dashboard');
+      console.error('Ou configure DB_HOST, DB_NAME, DB_USER, DB_PASSWORD');
+      throw new Error('Configuração de banco de dados não encontrada');
+    }
 
     // Testar conexão com o banco
     console.log('🔌 Tentando conectar ao banco de dados...');
-    await sequelize.authenticate();
-    console.log('✅ Conexão com o banco de dados estabelecida com sucesso.');
+    try {
+      await sequelize.authenticate();
+      console.log('✅ Conexão com o banco de dados estabelecida com sucesso.');
+    } catch (dbError) {
+      console.error('❌ Erro ao conectar ao banco de dados:');
+      console.error('Mensagem:', dbError.message);
+      if (dbError.original) {
+        console.error('Erro original:', dbError.original.message);
+      }
+      throw dbError;
+    }
 
     // Sincronizar modelos (criar tabelas se não existirem)
     console.log('🔄 Sincronizando modelos...');
-    await sequelize.sync({ alter: false }); // Alterado para false para evitar alterações automáticas em produção
-    console.log('✅ Modelos sincronizados com o banco de dados.');
+    try {
+      await sequelize.sync({ alter: false }); // Alterado para false para evitar alterações automáticas em produção
+      console.log('✅ Modelos sincronizados com o banco de dados.');
+    } catch (syncError) {
+      console.error('❌ Erro ao sincronizar modelos:');
+      console.error('Mensagem:', syncError.message);
+      if (syncError.original) {
+        console.error('Erro original:', syncError.original.message);
+      }
+      // Não lançar erro aqui, continuar mesmo se a sincronização falhar
+      console.warn('⚠️ Continuando sem sincronização de modelos...');
+    }
 
     // Iniciar servidor
     app.listen(PORT, '0.0.0.0', () => {
@@ -83,11 +111,14 @@ async function startServer() {
 
   } catch (error) {
     console.error('❌ Erro ao inicializar servidor:');
-    console.error('Erro completo:', error);
+    console.error('Tipo do erro:', error.constructor.name);
+    console.error('Mensagem:', error.message);
     console.error('Stack trace:', error.stack);
     if (error.original) {
-      console.error('Erro original:', error.original);
+      console.error('Erro original:', error.original.message);
+      console.error('Stack original:', error.original.stack);
     }
+    console.error('Encerrando processo...');
     process.exit(1);
   }
 }
