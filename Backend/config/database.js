@@ -3,16 +3,24 @@ require('dotenv').config();
 
 // Configuração do banco de dados
 // Suporta DATABASE_URL (Supabase) ou variáveis individuais
-let sequelize;
+let sequelize = null;
+let Usuario = null;
 
-try {
+// Função para inicializar o Sequelize
+function initializeSequelize() {
+  if (sequelize) {
+    return sequelize; // Já inicializado
+  }
+
   if (process.env.DATABASE_URL) {
     console.log('📦 Usando DATABASE_URL para conexão');
-    // Usar DATABASE_URL do Supabase
+    // Usar DATABASE_URL do Supabase ou outros provedores
     sequelize = new Sequelize(process.env.DATABASE_URL, {
       dialect: 'postgres',
       dialectOptions: {
-        ssl: process.env.DATABASE_URL.includes('supabase') ? {
+        ssl: (process.env.DATABASE_URL.includes('supabase') || 
+              process.env.DATABASE_URL.includes('amazonaws.com') ||
+              process.env.DATABASE_URL.includes('render.com')) ? {
           require: true,
           rejectUnauthorized: false
         } : false
@@ -54,31 +62,54 @@ try {
       }
     });
   } else {
+    const errorMsg = 'Configuração de banco de dados não encontrada. Configure DATABASE_URL ou variáveis individuais (DB_HOST, DB_NAME, etc.).';
     console.error('❌ ERRO: Nenhuma configuração de banco de dados encontrada!');
     console.error('Configure DATABASE_URL ou as variáveis DB_HOST, DB_NAME, etc.');
-    throw new Error('Configuração de banco de dados não encontrada. Configure DATABASE_URL ou variáveis individuais.');
+    throw new Error(errorMsg);
   }
-} catch (error) {
-  console.error('❌ Erro ao configurar Sequelize:', error);
-  throw error;
+  
+  return sequelize;
 }
 
-// Importar modelos
-let Usuario;
+// Função para inicializar modelos
+function initializeModels() {
+  if (Usuario) {
+    return Usuario; // Já inicializado
+  }
 
-try {
+  if (!sequelize) {
+    initializeSequelize();
+  }
+
   const UsuarioModel = require('../models/Usuario');
   Usuario = UsuarioModel(sequelize);
   console.log('✅ Modelo Usuario carregado com sucesso');
-} catch (error) {
-  console.error('❌ Erro ao carregar modelo Usuario:', error);
-  throw error;
+  return Usuario;
 }
+
+// Não inicializar no carregamento do módulo - deixar para o app.js fazer isso
+// Isso evita que o módulo quebre quando as variáveis não estiverem configuradas
 
 // Associar modelos (se houver relacionamentos futuros)
 // Usuario.hasMany(OutroModelo, { foreignKey: 'usuarioId' });
 
+// Exportar com getters para inicialização lazy
+// O getter só inicializa quando acessado, não no carregamento do módulo
 module.exports = {
-  sequelize,
-  Usuario
+  get sequelize() {
+    if (!sequelize && (process.env.DATABASE_URL || process.env.DB_HOST)) {
+      initializeSequelize();
+    }
+    return sequelize;
+  },
+  get Usuario() {
+    // Só inicializa quando acessado e se as variáveis estiverem configuradas
+    if (!Usuario && (process.env.DATABASE_URL || process.env.DB_HOST)) {
+      initializeModels();
+    }
+    return Usuario;
+  },
+  // Funções auxiliares para inicialização
+  initializeSequelize,
+  initializeModels
 };

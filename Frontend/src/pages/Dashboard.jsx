@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Crown, User, Mail, Phone, MapPin, LogOut, Edit, Trash2, RotateCcw } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { User, Mail, Phone, MapPin, LogOut, Edit, Trash2, CreditCard, Save, X, Calendar, Bed, Sparkles, Settings } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { getUserById, updateUser, deleteUser, restoreUser } from '../services/api'
+import { getUserById, updateUser, deleteUser } from '../services/api'
 
 const Dashboard = () => {
   const [user, setUser] = useState(null)
@@ -11,6 +12,13 @@ const Dashboard = () => {
   const [isSaving, setIsSaving] = useState(false)
   const navigate = useNavigate()
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm()
+
   useEffect(() => {
     const userData = localStorage.getItem('user')
     if (!userData) {
@@ -18,9 +26,11 @@ const Dashboard = () => {
       return
     }
     
-    setUser(JSON.parse(userData))
+    const parsedUser = JSON.parse(userData)
+    setUser(parsedUser)
+    reset(parsedUser)
     setIsLoading(false)
-  }, [navigate])
+  }, [navigate, reset])
 
   const handleLogout = () => {
     localStorage.removeItem('user')
@@ -28,10 +38,10 @@ const Dashboard = () => {
     navigate('/login')
   }
 
-  const handleSave = async (updatedData) => {
+  const onSubmit = async (data) => {
     setIsSaving(true)
     try {
-      const response = await updateUser(user.id, updatedData)
+      const response = await updateUser(user.id, data)
       if (response.success) {
         setUser(response.data)
         localStorage.setItem('user', JSON.stringify(response.data))
@@ -57,139 +67,254 @@ const Dashboard = () => {
     }
   }
 
+  const handleCancelEdit = () => {
+    reset(user)
+    setIsEditing(false)
+  }
+
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-indigo-600 border-t-transparent mx-auto mb-4"></div>
+          <p className="text-gray-600">Carregando...</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Header */}
-      <header className="bg-black/20 backdrop-blur-sm border-b border-white/10">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header moderno */}
+      <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
+          <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
-                <Crown className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                <Sparkles className="w-6 h-6 text-white" />
               </div>
-              <h1 className="text-2xl font-bold text-white">Hotel Imperium</h1>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">Hotel Imperium</h1>
+                <p className="text-xs text-gray-500">Dashboard</p>
+              </div>
             </div>
             <button
               onClick={handleLogout}
-              className="flex items-center space-x-2 text-white/80 hover:text-white transition-colors"
+              className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <LogOut className="w-5 h-5" />
-              <span>Sair</span>
+              <span className="hidden sm:inline">Sair</span>
             </button>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="glass-effect rounded-2xl p-8 shadow-luxury">
-          {/* Welcome Section */}
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-white mb-2">
-              Bem-vindo, {user?.nome || 'Usuário'}!
-            </h2>
-            <p className="text-white/80">
-              Gerencie suas informações e aproveite nossos serviços
-            </p>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Welcome Section */}
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            Olá, {user?.nome?.split(' ')[0] || 'Usuário'}! 👋
+          </h2>
+          <p className="text-gray-600">
+            Gerencie suas informações e aproveite nossos serviços
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Profile Card */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-gray-900">Informações do Perfil</h3>
+                {!isEditing && (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                  >
+                    <Edit className="w-4 h-4" />
+                    <span>Editar</span>
+                  </button>
+                )}
+              </div>
+
+              {isEditing ? (
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Nome Completo
+                      </label>
+                      <input
+                        type="text"
+                        {...register('nome')}
+                        className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        {...register('email')}
+                        className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Telefone
+                      </label>
+                      <input
+                        type="text"
+                        {...register('telefone')}
+                        className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        CPF
+                      </label>
+                      <input
+                        type="text"
+                        {...register('cpf')}
+                        className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
+                        disabled
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Endereço
+                      </label>
+                      <input
+                        type="text"
+                        {...register('endereco')}
+                        className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3 pt-4">
+                    <button
+                      type="submit"
+                      disabled={isSaving}
+                      className="flex items-center space-x-2 px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                    >
+                      <Save className="w-4 h-4" />
+                      <span>{isSaving ? 'Salvando...' : 'Salvar alterações'}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      className="flex items-center space-x-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                      <span>Cancelar</span>
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex items-start space-x-4">
+                      <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <User className="w-6 h-6 text-indigo-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500 mb-1">Nome</p>
+                        <p className="text-gray-900 font-semibold">{user?.nome || 'Não informado'}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-4">
+                      <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <Mail className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500 mb-1">Email</p>
+                        <p className="text-gray-900 font-semibold">{user?.email || 'Não informado'}</p>
+                      </div>
+                    </div>
+
+                    {user?.telefone && (
+                      <div className="flex items-start space-x-4">
+                        <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <Phone className="w-6 h-6 text-green-600" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500 mb-1">Telefone</p>
+                          <p className="text-gray-900 font-semibold">{user.telefone}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="flex items-start space-x-4">
+                      <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <CreditCard className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500 mb-1">CPF</p>
+                        <p className="text-gray-900 font-semibold">{user?.cpf || 'Não informado'}</p>
+                      </div>
+                    </div>
+
+                    {user?.endereco && (
+                      <div className="flex items-start space-x-4 md:col-span-2">
+                        <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <MapPin className="w-6 h-6 text-orange-600" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500 mb-1">Endereço</p>
+                          <p className="text-gray-900 font-semibold">{user.endereco}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* User Info */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Profile Card */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-white mb-4">Informações Pessoais</h3>
-              
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <User className="w-5 h-5 text-yellow-400" />
-                  <div>
-                    <p className="text-white/60 text-sm">Nome</p>
-                    <p className="text-white font-medium">{user?.nome || 'Não informado'}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-3">
-                  <Mail className="w-5 h-5 text-yellow-400" />
-                  <div>
-                    <p className="text-white/60 text-sm">Email</p>
-                    <p className="text-white font-medium">{user?.email || 'Não informado'}</p>
-                  </div>
-                </div>
-
-                {user?.telefone && (
-                  <div className="flex items-center space-x-3">
-                    <Phone className="w-5 h-5 text-yellow-400" />
-                    <div>
-                      <p className="text-white/60 text-sm">Telefone</p>
-                      <p className="text-white font-medium">{user.telefone}</p>
-                    </div>
-                  </div>
-                )}
-
-                {user?.endereco && (
-                  <div className="flex items-center space-x-3">
-                    <MapPin className="w-5 h-5 text-yellow-400" />
-                    <div>
-                      <p className="text-white/60 text-sm">Endereço</p>
-                      <p className="text-white font-medium">{user.endereco}</p>
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex items-center space-x-3">
-                  <CreditCard className="w-5 h-5 text-yellow-400" />
-                  <div>
-                    <p className="text-white/60 text-sm">CPF</p>
-                    <p className="text-white font-medium">{user?.cpf || 'Não informado'}</p>
-                  </div>
-                </div>
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Quick Actions */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Ações Rápidas</h3>
+              <div className="space-y-3">
+                <button
+                  onClick={handleDelete}
+                  className="w-full flex items-center space-x-3 px-4 py-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-colors"
+                >
+                  <Trash2 className="w-5 h-5" />
+                  <span className="font-medium">Deletar Conta</span>
+                </button>
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-white mb-4">Ações</h3>
-              
-              <div className="space-y-4">
-                <button
-                  onClick={() => setIsEditing(!isEditing)}
-                  className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-3 px-4 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-[1.02]"
-                >
-                  <Edit className="w-5 h-5" />
-                  <span>{isEditing ? 'Cancelar Edição' : 'Editar Perfil'}</span>
+            {/* Services */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Serviços</h3>
+              <div className="space-y-3">
+                <button className="w-full flex items-center space-x-3 px-4 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all transform hover:scale-[1.02]">
+                  <Calendar className="w-5 h-5" />
+                  <span className="font-medium">Fazer Reserva</span>
                 </button>
-
-                <button
-                  onClick={handleDelete}
-                  className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold py-3 px-4 rounded-lg hover:from-red-600 hover:to-red-700 transition-all transform hover:scale-[1.02]"
-                >
-                  <Trash2 className="w-5 h-5" />
-                  <span>Deletar Conta</span>
+                <button className="w-full flex items-center space-x-3 px-4 py-3 bg-gray-50 text-gray-700 rounded-xl hover:bg-gray-100 transition-colors">
+                  <Bed className="w-5 h-5" />
+                  <span className="font-medium">Minhas Reservas</span>
                 </button>
-              </div>
-
-              {/* Hotel Services */}
-              <div className="mt-8">
-                <h4 className="text-lg font-semibold text-white mb-4">Serviços do Hotel</h4>
-                <div className="grid grid-cols-1 gap-3">
-                  <button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-white font-semibold py-3 px-4 rounded-lg hover:from-yellow-500 hover:to-yellow-700 transition-all transform hover:scale-[1.02]">
-                    Fazer Reserva
-                  </button>
-                  <button className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold py-3 px-4 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-[1.02]">
-                    Minhas Reservas
-                  </button>
-                  <button className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold py-3 px-4 rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-[1.02]">
-                    Serviços Adicionais
-                  </button>
-                </div>
+                <button className="w-full flex items-center space-x-3 px-4 py-3 bg-gray-50 text-gray-700 rounded-xl hover:bg-gray-100 transition-colors">
+                  <Sparkles className="w-5 h-5" />
+                  <span className="font-medium">Serviços Extras</span>
+                </button>
+                <button className="w-full flex items-center space-x-3 px-4 py-3 bg-gray-50 text-gray-700 rounded-xl hover:bg-gray-100 transition-colors">
+                  <Settings className="w-5 h-5" />
+                  <span className="font-medium">Configurações</span>
+                </button>
               </div>
             </div>
           </div>
@@ -200,5 +325,3 @@ const Dashboard = () => {
 }
 
 export default Dashboard
-
-

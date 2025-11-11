@@ -1,5 +1,8 @@
-const { Usuario } = require('../config/database');
+const database = require('../config/database');
 const { Op } = require('sequelize');
+
+// Função helper para obter Usuario de forma lazy
+const getUsuario = () => database.Usuario;
 
 class UsuarioController {
   
@@ -9,7 +12,7 @@ class UsuarioController {
       const { nome, cpf, email, telefone, endereco, senha } = req.body;
 
       // Verificar se email já existe
-      const emailExistente = await Usuario.findOne({
+      const emailExistente = await getUsuario().findOne({
         where: { email },
         paranoid: false // Inclui registros deletados
       });
@@ -22,7 +25,7 @@ class UsuarioController {
       }
 
       // Verificar se CPF já existe
-      const cpfExistente = await Usuario.findOne({
+      const cpfExistente = await getUsuario().findOne({
         where: { cpf },
         paranoid: false
       });
@@ -34,7 +37,7 @@ class UsuarioController {
         });
       }
 
-      const novoUsuario = await Usuario.create({
+      const novoUsuario = await getUsuario().create({
         nome,
         cpf,
         email,
@@ -77,7 +80,7 @@ class UsuarioController {
         };
       }
 
-      const { count, rows } = await Usuario.findAndCountAll({
+      const { count, rows } = await getUsuario().findAndCountAll({
         where: whereClause,
         limit: parseInt(limit),
         offset: parseInt(offset),
@@ -110,7 +113,7 @@ class UsuarioController {
     try {
       const { id } = req.params;
 
-      const usuario = await Usuario.findByPk(id);
+      const usuario = await getUsuario().findByPk(id);
 
       if (!usuario) {
         return res.status(404).json({
@@ -140,7 +143,7 @@ class UsuarioController {
       const { id } = req.params;
       const { nome, cpf, email, telefone, endereco, senha } = req.body;
 
-      const usuario = await Usuario.findByPk(id);
+      const usuario = await getUsuario().findByPk(id);
 
       if (!usuario) {
         return res.status(404).json({
@@ -151,7 +154,7 @@ class UsuarioController {
 
       // Verificar se email já existe em outro usuário
       if (email && email !== usuario.email) {
-        const emailExistente = await Usuario.findOne({
+        const emailExistente = await getUsuario().findOne({
           where: { 
             email,
             id: { [Op.ne]: id }
@@ -169,7 +172,7 @@ class UsuarioController {
 
       // Verificar se CPF já existe em outro usuário
       if (cpf && cpf !== usuario.cpf) {
-        const cpfExistente = await Usuario.findOne({
+        const cpfExistente = await getUsuario().findOne({
           where: { 
             cpf,
             id: { [Op.ne]: id }
@@ -216,7 +219,7 @@ class UsuarioController {
       const { id } = req.params;
       const { deletedBy } = req.body; // ID do usuário que está deletando
 
-      const usuario = await Usuario.findByPk(id);
+      const usuario = await getUsuario().findByPk(id);
 
       if (!usuario) {
         return res.status(404).json({
@@ -252,7 +255,7 @@ class UsuarioController {
     try {
       const { id } = req.params;
 
-      const usuario = await Usuario.findByPk(id, {
+      const usuario = await getUsuario().findByPk(id, {
         paranoid: false
       });
 
@@ -300,7 +303,7 @@ class UsuarioController {
         });
       }
 
-      const usuario = await Usuario.findOne({
+      const usuario = await getUsuario().findOne({
         where: { email }
       });
 
@@ -342,7 +345,7 @@ class UsuarioController {
       const { page = 1, limit = 10 } = req.query;
       const offset = (page - 1) * limit;
 
-      const { count, rows } = await Usuario.findAndCountAll({
+      const { count, rows } = await getUsuario().findAndCountAll({
         where: {
           deletedAt: { [Op.ne]: null }
         },

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { Eye, EyeOff, Crown, Mail, Lock, User, Phone, MapPin, CreditCard } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, User, Phone, MapPin, CreditCard, ArrowRight } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { createUser } from '../services/api'
 
@@ -54,36 +54,37 @@ const Cadastro = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      {/* Background decorativo */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-indigo-50 via-white to-purple-50 bg-pattern py-12">
+      {/* Background decorativo moderno */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-pink-400/20 to-rose-400/20 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="relative z-10 w-full max-w-2xl">
-        {/* Card de Cadastro */}
-        <div className="glass-effect rounded-2xl p-8 shadow-luxury animate-fadeIn">
+      <div className="relative z-10 w-full max-w-3xl animate-fadeIn">
+        {/* Card de Cadastro moderno */}
+        <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-10 border border-gray-100">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full mb-4">
-              <Crown className="w-8 h-8 text-white" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl mb-4 shadow-lg">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+              </svg>
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">Hotel Imperium</h1>
-            <p className="text-white/80">Crie sua conta e aproveite nossos serviços</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Criar sua conta</h1>
+            <p className="text-gray-600">Preencha os dados abaixo para começar</p>
           </div>
 
           {/* Formulário */}
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Nome */}
               <div>
-                <label className="block text-sm font-medium text-white/90 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Nome Completo *
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60" />
+                  <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="text"
                     {...register('nome', {
@@ -97,22 +98,24 @@ const Cadastro = () => {
                         message: 'Nome deve ter no máximo 100 caracteres'
                       }
                     })}
-                    className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
                     placeholder="Seu nome completo"
                   />
                 </div>
                 {errors.nome && (
-                  <p className="mt-1 text-sm text-red-300">{errors.nome.message}</p>
+                  <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
+                    <span>•</span> {errors.nome.message}
+                  </p>
                 )}
               </div>
 
               {/* CPF */}
               <div>
-                <label className="block text-sm font-medium text-white/90 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   CPF *
                 </label>
                 <div className="relative">
-                  <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60" />
+                  <CreditCard className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="text"
                     {...register('cpf', {
@@ -125,22 +128,24 @@ const Cadastro = () => {
                     onChange={(e) => {
                       e.target.value = formatCPF(e.target.value)
                     }}
-                    className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
                     placeholder="000.000.000-00"
                   />
                 </div>
                 {errors.cpf && (
-                  <p className="mt-1 text-sm text-red-300">{errors.cpf.message}</p>
+                  <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
+                    <span>•</span> {errors.cpf.message}
+                  </p>
                 )}
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-white/90 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Email *
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60" />
+                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="email"
                     {...register('email', {
@@ -150,22 +155,24 @@ const Cadastro = () => {
                         message: 'Email inválido'
                       }
                     })}
-                    className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
                     placeholder="seu@email.com"
                   />
                 </div>
                 {errors.email && (
-                  <p className="mt-1 text-sm text-red-300">{errors.email.message}</p>
+                  <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
+                    <span>•</span> {errors.email.message}
+                  </p>
                 )}
               </div>
 
               {/* Telefone */}
               <div>
-                <label className="block text-sm font-medium text-white/90 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Telefone
                 </label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60" />
+                  <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="text"
                     {...register('telefone', {
@@ -177,22 +184,24 @@ const Cadastro = () => {
                     onChange={(e) => {
                       e.target.value = formatPhone(e.target.value)
                     }}
-                    className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
                     placeholder="(00) 0000-0000"
                   />
                 </div>
                 {errors.telefone && (
-                  <p className="mt-1 text-sm text-red-300">{errors.telefone.message}</p>
+                  <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
+                    <span>•</span> {errors.telefone.message}
+                  </p>
                 )}
               </div>
 
               {/* Endereço */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-white/90 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Endereço
                 </label>
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60" />
+                  <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="text"
                     {...register('endereco', {
@@ -201,22 +210,24 @@ const Cadastro = () => {
                         message: 'Endereço deve ter no máximo 50 caracteres'
                       }
                     })}
-                    className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
                     placeholder="Rua, número, bairro, cidade"
                   />
                 </div>
                 {errors.endereco && (
-                  <p className="mt-1 text-sm text-red-300">{errors.endereco.message}</p>
+                  <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
+                    <span>•</span> {errors.endereco.message}
+                  </p>
                 )}
               </div>
 
               {/* Senha */}
               <div>
-                <label className="block text-sm font-medium text-white/90 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Senha *
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60" />
+                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     {...register('senha', {
@@ -226,41 +237,45 @@ const Cadastro = () => {
                         message: 'Senha deve ter pelo menos 6 caracteres'
                       }
                     })}
-                    className="w-full pl-10 pr-12 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                    className="w-full pl-12 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
                     placeholder="Mínimo 6 caracteres"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white transition-colors"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
                 {errors.senha && (
-                  <p className="mt-1 text-sm text-red-300">{errors.senha.message}</p>
+                  <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
+                    <span>•</span> {errors.senha.message}
+                  </p>
                 )}
               </div>
 
               {/* Confirmar Senha */}
               <div>
-                <label className="block text-sm font-medium text-white/90 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Confirmar Senha *
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60" />
+                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     {...register('confirmarSenha', {
                       required: 'Confirmação de senha é obrigatória',
                       validate: value => value === password || 'Senhas não coincidem'
                     })}
-                    className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
                     placeholder="Confirme sua senha"
                   />
                 </div>
                 {errors.confirmarSenha && (
-                  <p className="mt-1 text-sm text-red-300">{errors.confirmarSenha.message}</p>
+                  <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
+                    <span>•</span> {errors.confirmarSenha.message}
+                  </p>
                 )}
               </div>
             </div>
@@ -269,36 +284,50 @@ const Cadastro = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-white font-semibold py-3 px-4 rounded-lg hover:from-yellow-500 hover:to-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-transparent transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-3.5 px-4 rounded-xl hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg shadow-indigo-500/50 mt-6"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2"></div>
                   Criando conta...
                 </div>
               ) : (
-                'Criar Conta'
+                <div className="flex items-center justify-center gap-2">
+                  Criar conta
+                  <ArrowRight className="w-5 h-5" />
+                </div>
               )}
             </button>
           </form>
 
+          {/* Divisor */}
+          <div className="relative my-8">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 bg-white text-gray-500">ou</span>
+            </div>
+          </div>
+
           {/* Links */}
-          <div className="mt-8 text-center">
-            <p className="text-white/80">
+          <div className="text-center">
+            <p className="text-gray-600">
               Já tem uma conta?{' '}
               <Link
                 to="/login"
-                className="text-yellow-400 hover:text-yellow-300 font-semibold transition-colors"
+                className="font-semibold text-indigo-600 hover:text-indigo-700 transition-colors inline-flex items-center gap-1"
               >
-                Faça login
+                Fazer login
+                <ArrowRight className="w-4 h-4" />
               </Link>
             </p>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-8">
-          <p className="text-white/60 text-sm">
+        <div className="text-center mt-6">
+          <p className="text-gray-500 text-sm">
             © 2024 Hotel Imperium. Todos os direitos reservados.
           </p>
         </div>
@@ -308,5 +337,3 @@ const Cadastro = () => {
 }
 
 export default Cadastro
-
-

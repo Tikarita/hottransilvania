@@ -8,7 +8,7 @@ require('dotenv').config();
 const usuarioRoutes = require('./routes/usuarioRoutes');
 
 // Importar e configurar banco de dados
-const { sequelize } = require('./config/database');
+const { sequelize: sequelizeConfig, initializeSequelize, initializeModels } = require('./config/database');
 
 const app = express();
 // Render define PORT automaticamente, mas usamos 3000 como fallback
@@ -70,7 +70,26 @@ async function startServer() {
       console.error('❌ ERRO CRÍTICO: Nenhuma configuração de banco de dados encontrada!');
       console.error('Por favor, configure DATABASE_URL no Render Dashboard');
       console.error('Ou configure DB_HOST, DB_NAME, DB_USER, DB_PASSWORD');
+      console.error('');
+      console.error('📝 Como configurar no Render:');
+      console.error('1. Acesse o dashboard do Render');
+      console.error('2. Vá em Settings → Environment Variables');
+      console.error('3. Adicione DATABASE_URL com a string de conexão do seu banco');
       throw new Error('Configuração de banco de dados não encontrada');
+    }
+
+    // Inicializar banco de dados se ainda não foi inicializado
+    let sequelize = sequelizeConfig;
+    if (!sequelize) {
+      console.log('🔄 Inicializando banco de dados...');
+      try {
+        sequelize = initializeSequelize();
+        initializeModels();
+      } catch (initError) {
+        console.error('❌ Erro ao inicializar banco de dados:');
+        console.error('Mensagem:', initError.message);
+        throw initError;
+      }
     }
 
     // Testar conexão com o banco
@@ -83,7 +102,14 @@ async function startServer() {
       console.error('Mensagem:', dbError.message);
       if (dbError.original) {
         console.error('Erro original:', dbError.original.message);
+        console.error('Código:', dbError.original.code);
       }
+      console.error('');
+      console.error('💡 Dicas para resolver:');
+      console.error('1. Verifique se a DATABASE_URL está correta');
+      console.error('2. Verifique se o banco de dados está acessível');
+      console.error('3. Verifique se as credenciais estão corretas');
+      console.error('4. Para Supabase, certifique-se de usar a Connection String (URI)');
       throw dbError;
     }
 
@@ -126,13 +152,27 @@ async function startServer() {
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   console.log('🛑 Recebido SIGTERM, encerrando servidor...');
-  await sequelize.close();
+  try {
+    const { sequelize: db } = require('./config/database');
+    if (db) {
+      await db.close();
+    }
+  } catch (error) {
+    console.error('Erro ao fechar conexão:', error.message);
+  }
   process.exit(0);
 });
 
 process.on('SIGINT', async () => {
   console.log('🛑 Recebido SIGINT, encerrando servidor...');
-  await sequelize.close();
+  try {
+    const { sequelize: db } = require('./config/database');
+    if (db) {
+      await db.close();
+    }
+  } catch (error) {
+    console.error('Erro ao fechar conexão:', error.message);
+  }
   process.exit(0);
 });
 
