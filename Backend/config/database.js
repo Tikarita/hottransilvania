@@ -5,6 +5,7 @@ require('dotenv').config();
 // Suporta DATABASE_URL (Supabase) ou variáveis individuais
 let sequelize = null;
 let Usuario = null;
+let isInitialized = false;
 
 // Função para inicializar o Sequelize
 function initializeSequelize() {
@@ -84,6 +85,7 @@ function initializeModels() {
   const UsuarioModel = require('../models/Usuario');
   Usuario = UsuarioModel(sequelize);
   console.log('✅ Modelo Usuario carregado com sucesso');
+  isInitialized = true;
   return Usuario;
 }
 
@@ -92,6 +94,19 @@ function getUsuarioModel() {
   // Se já foi inicializado, retorna diretamente
   if (Usuario) {
     return Usuario;
+  }
+
+  // Verifica se há variáveis configuradas antes de criar o proxy
+  if (!process.env.DATABASE_URL && !process.env.DB_HOST) {
+    // Retorna um objeto que lança erro quando usado
+    return new Proxy({}, {
+      get() {
+        throw new Error('Banco de dados não inicializado. Configure DATABASE_URL no Render Dashboard antes de usar.');
+      },
+      apply() {
+        throw new Error('Banco de dados não inicializado. Configure DATABASE_URL no Render Dashboard antes de usar.');
+      }
+    });
   }
 
   // Cria um proxy que inicializa quando usado
@@ -150,6 +165,7 @@ module.exports = {
   },
   get Usuario() {
     // Retornar através da função que cria proxy apenas quando necessário
+    // Isso garante que o módulo possa ser carregado sem erro
     return getUsuarioModel();
   },
   // Funções auxiliares para inicialização
