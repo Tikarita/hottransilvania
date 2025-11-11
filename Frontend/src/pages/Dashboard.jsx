@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { User, Mail, Phone, MapPin, LogOut, Edit, Trash2, CreditCard, Save, X, Calendar, Bed, Sparkles, Settings } from 'lucide-react'
+import { User, Mail, Phone, MapPin, LogOut, Edit, Trash2, Save, X, CreditCard, Search, Calendar, Bed, Star, Settings, Bell } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { getUserById, updateUser, deleteUser } from '../services/api'
 
@@ -76,7 +76,7 @@ const Dashboard = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-indigo-600 border-t-transparent mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mx-auto mb-4"></div>
           <p className="text-gray-600">Carregando...</p>
         </div>
       </div>
@@ -85,26 +85,33 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header moderno */}
+      {/* Header estilo Trivago */}
       <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                <Sparkles className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-green-500 rounded-lg flex items-center justify-center">
+                <Search className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Hotel Imperium</h1>
+                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">
+                  Hotel Imperium
+                </h1>
                 <p className="text-xs text-gray-500">Dashboard</p>
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <LogOut className="w-5 h-5" />
-              <span className="hidden sm:inline">Sair</span>
-            </button>
+            <div className="flex items-center space-x-4">
+              <button className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+                <Bell className="w-5 h-5" />
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <LogOut className="w-5 h-5" />
+                <span className="hidden sm:inline">Sair</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -130,7 +137,7 @@ const Dashboard = () => {
                 {!isEditing && (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                    className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                   >
                     <Edit className="w-4 h-4" />
                     <span>Editar</span>
@@ -148,7 +155,7 @@ const Dashboard = () => {
                       <input
                         type="text"
                         {...register('nome')}
-                        className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
+                        className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                       />
                     </div>
 
@@ -159,7 +166,7 @@ const Dashboard = () => {
                       <input
                         type="email"
                         {...register('email')}
-                        className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
+                        className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                       />
                     </div>
 
@@ -170,7 +177,7 @@ const Dashboard = () => {
                       <input
                         type="text"
                         {...register('telefone')}
-                        className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
+                        className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                       />
                     </div>
 
@@ -181,7 +188,7 @@ const Dashboard = () => {
                       <input
                         type="text"
                         {...register('cpf')}
-                        className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
+                        className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                         disabled
                       />
                     </div>
@@ -193,7 +200,7 @@ const Dashboard = () => {
                       <input
                         type="text"
                         {...register('endereco')}
-                        className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
+                        className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                       />
                     </div>
                   </div>
@@ -202,7 +209,7 @@ const Dashboard = () => {
                     <button
                       type="submit"
                       disabled={isSaving}
-                      className="flex items-center space-x-2 px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                      className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50"
                     >
                       <Save className="w-4 h-4" />
                       <span>{isSaving ? 'Salvando...' : 'Salvar alterações'}</span>
@@ -221,8 +228,8 @@ const Dashboard = () => {
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <User className="w-6 h-6 text-indigo-600" />
+                      <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <User className="w-6 h-6 text-blue-600" />
                       </div>
                       <div>
                         <p className="text-sm text-gray-500 mb-1">Nome</p>
@@ -231,8 +238,8 @@ const Dashboard = () => {
                     </div>
 
                     <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <Mail className="w-6 h-6 text-purple-600" />
+                      <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <Mail className="w-6 h-6 text-green-600" />
                       </div>
                       <div>
                         <p className="text-sm text-gray-500 mb-1">Email</p>
@@ -242,8 +249,8 @@ const Dashboard = () => {
 
                     {user?.telefone && (
                       <div className="flex items-start space-x-4">
-                        <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                          <Phone className="w-6 h-6 text-green-600" />
+                        <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <Phone className="w-6 h-6 text-purple-600" />
                         </div>
                         <div>
                           <p className="text-sm text-gray-500 mb-1">Telefone</p>
@@ -253,8 +260,8 @@ const Dashboard = () => {
                     )}
 
                     <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <CreditCard className="w-6 h-6 text-blue-600" />
+                      <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <CreditCard className="w-6 h-6 text-orange-600" />
                       </div>
                       <div>
                         <p className="text-sm text-gray-500 mb-1">CPF</p>
@@ -264,8 +271,8 @@ const Dashboard = () => {
 
                     {user?.endereco && (
                       <div className="flex items-start space-x-4 md:col-span-2">
-                        <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                          <MapPin className="w-6 h-6 text-orange-600" />
+                        <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <MapPin className="w-6 h-6 text-pink-600" />
                         </div>
                         <div>
                           <p className="text-sm text-gray-500 mb-1">Endereço</p>
@@ -295,26 +302,41 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Services */}
+            {/* Services Cards estilo Trivago */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-4">Serviços</h3>
               <div className="space-y-3">
-                <button className="w-full flex items-center space-x-3 px-4 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all transform hover:scale-[1.02]">
+                <button className="w-full flex items-center space-x-3 px-4 py-4 bg-gradient-to-r from-blue-600 to-green-500 text-white rounded-xl hover:from-blue-700 hover:to-green-600 transition-all transform hover:scale-[1.02] shadow-lg">
                   <Calendar className="w-5 h-5" />
-                  <span className="font-medium">Fazer Reserva</span>
+                  <span className="font-semibold">Fazer Reserva</span>
                 </button>
                 <button className="w-full flex items-center space-x-3 px-4 py-3 bg-gray-50 text-gray-700 rounded-xl hover:bg-gray-100 transition-colors">
                   <Bed className="w-5 h-5" />
                   <span className="font-medium">Minhas Reservas</span>
                 </button>
                 <button className="w-full flex items-center space-x-3 px-4 py-3 bg-gray-50 text-gray-700 rounded-xl hover:bg-gray-100 transition-colors">
-                  <Sparkles className="w-5 h-5" />
-                  <span className="font-medium">Serviços Extras</span>
+                  <Star className="w-5 h-5" />
+                  <span className="font-medium">Avaliações</span>
                 </button>
                 <button className="w-full flex items-center space-x-3 px-4 py-3 bg-gray-50 text-gray-700 rounded-xl hover:bg-gray-100 transition-colors">
                   <Settings className="w-5 h-5" />
                   <span className="font-medium">Configurações</span>
                 </button>
+              </div>
+            </div>
+
+            {/* Stats Card */}
+            <div className="bg-gradient-to-br from-blue-600 to-green-500 rounded-2xl shadow-lg p-6 text-white">
+              <h3 className="text-lg font-bold mb-4">Estatísticas</h3>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm opacity-90">Reservas Totais</p>
+                  <p className="text-3xl font-bold">0</p>
+                </div>
+                <div>
+                  <p className="text-sm opacity-90">Noites Reservadas</p>
+                  <p className="text-3xl font-bold">0</p>
+                </div>
               </div>
             </div>
           </div>
