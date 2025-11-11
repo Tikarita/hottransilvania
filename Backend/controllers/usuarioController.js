@@ -2,7 +2,11 @@ const database = require('../config/database');
 const { Op } = require('sequelize');
 
 // Função helper para obter Usuario de forma lazy
-const getUsuario = () => database.Usuario;
+// Acessa o getter apenas quando necessário, não no carregamento do módulo
+const getUsuario = () => {
+  // Acessa o getter apenas quando a função é chamada
+  return database.Usuario;
+};
 
 class UsuarioController {
   

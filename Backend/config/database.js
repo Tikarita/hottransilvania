@@ -87,6 +87,47 @@ function initializeModels() {
   return Usuario;
 }
 
+// Função para obter Usuario - cria proxy apenas quando necessário
+function getUsuarioModel() {
+  // Se já foi inicializado, retorna diretamente
+  if (Usuario) {
+    return Usuario;
+  }
+
+  // Cria um proxy que inicializa quando usado
+  return new Proxy({}, {
+    get(target, prop) {
+      // Quando qualquer propriedade é acessada, inicializa primeiro
+      if (!Usuario) {
+        try {
+          initializeModels();
+        } catch (error) {
+          // Se falhar, lança erro explicativo
+          throw new Error(`Banco de dados não inicializado: ${error.message}. Configure DATABASE_URL no Render Dashboard.`);
+        }
+      }
+      // Retorna a propriedade do modelo Usuario
+      const value = Usuario[prop];
+      // Se for uma função, bind para manter o contexto
+      if (typeof value === 'function') {
+        return value.bind(Usuario);
+      }
+      return value;
+    },
+    apply(target, thisArg, argumentsList) {
+      // Se tentar chamar como função
+      if (!Usuario) {
+        try {
+          initializeModels();
+        } catch (error) {
+          throw new Error(`Banco de dados não inicializado: ${error.message}. Configure DATABASE_URL no Render Dashboard.`);
+        }
+      }
+      return Usuario.apply(thisArg, argumentsList);
+    }
+  });
+}
+
 // Não inicializar no carregamento do módulo - deixar para o app.js fazer isso
 // Isso evita que o módulo quebre quando as variáveis não estiverem configuradas
 
@@ -98,16 +139,18 @@ function initializeModels() {
 module.exports = {
   get sequelize() {
     if (!sequelize && (process.env.DATABASE_URL || process.env.DB_HOST)) {
-      initializeSequelize();
+      try {
+        initializeSequelize();
+      } catch (error) {
+        console.error('Erro ao inicializar Sequelize:', error.message);
+        return null;
+      }
     }
     return sequelize;
   },
   get Usuario() {
-    // Só inicializa quando acessado e se as variáveis estiverem configuradas
-    if (!Usuario && (process.env.DATABASE_URL || process.env.DB_HOST)) {
-      initializeModels();
-    }
-    return Usuario;
+    // Retornar através da função que cria proxy apenas quando necessário
+    return getUsuarioModel();
   },
   // Funções auxiliares para inicialização
   initializeSequelize,
