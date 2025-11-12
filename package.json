@@ -26,9 +26,11 @@
     "npm": ">=8.0.0"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.1",
     "autoprefixer": "^10.4.22",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.17"
+    "tailwindcss": "^4.1.17",
+    "vite": "^7.2.2"
   },
   "main": "index.js",
   "dependencies": {
@@ -540,7 +542,6 @@
     "v8-to-istanbul": "^9.3.0",
     "validator": "^13.15.23",
     "vary": "^1.1.2",
-    "vite": "^5.4.21",
     "walker": "^1.0.8",
     "webidl-conversions": "^3.0.1",
     "whatwg-url": "^5.0.0",

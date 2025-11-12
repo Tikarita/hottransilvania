@@ -1,0 +1,196 @@
+/* Rustico / papel antigo + mesmo layout do Login */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:wght@300;400;700&display=swap');
+
+:root{
+  --bg-start: #f3efe6; /* parchment */
+  --bg-end: #efe7d8;
+  --card: #fffaf2;
+  --muted: #6b5b48;
+  --accent: #7a4b2a; /* madeira / cobre */
+  --accent-2: #8f6a3a;
+  --shadow: 0 10px 30px rgba(20,15,10,0.08);
+  --radius: 14px;
+  --paper-texture: linear-gradient(135deg, rgba(255,255,255,0.03) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.03) 75%, transparent 75%, transparent);
+}
+
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{
+  margin:0;
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  background: radial-gradient(circle at 10% 10%, rgba(139,115,85,0.06), transparent 10%),
+              linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  color:#2b2b2b;
+  background-attachment: fixed;
+}
+
+/* Layout (match Login structure) */
+.login-page{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px 20px;
+
+  /* necessário para posicionar os pseudo-elementos por trás */
+  position: relative;
+  z-index: 0;
+  overflow: visible;
+}
+
+/* grande mancha / embaçamento central atrás do card */
+.login-page::before{
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 18%;
+  width: 640px;
+  height: 640px;
+  transform: translateX(-50%) rotate(-12deg);
+  background:
+    radial-gradient(circle at 35% 35%, rgba(122,75,42,0.07), transparent 28%),
+    radial-gradient(circle at 65% 65%, rgba(139,115,85,0.04), transparent 30%),
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.00));
+  filter: blur(10px) saturate(90%);
+  z-index: 1;
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+/* selo rústico e desbotado no canto inferior direito */
+.login-page::after{
+  content: "";
+  position: absolute;
+  right: 8%;
+  bottom: 6%;
+  width: 260px;
+  height: 260px;
+  transform: rotate(18deg);
+  background:
+    radial-gradient(circle at 50% 40%, rgba(122,75,42,0.06), rgba(122,75,42,0.02) 40%, transparent 60%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0 6px, transparent 6px 12px);
+  opacity: 0.9;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: 50%;
+  mix-blend-mode: multiply;
+}
+
+/* Card with rustic border */
+.card{
+  width:100%;
+  max-width:520px;
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:34px;
+  border: 1px solid rgba(120,90,60,0.08);
+  background-image: var(--paper-texture);
+  background-size: 18px 18px;
+  position:relative;
+  z-index: 2;
+  overflow:hidden;
+  font-family: 'Inter', sans-serif;
+}
+
+/* subtle wooden frame */
+.card::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 6px rgba(122,75,42,0.06);
+}
+
+/* Logo / header */
+.logo{ text-align:left; margin-bottom:6px }
+.hotel-name{
+  margin:0;
+  font-size:20px;
+  font-family: 'Merriweather', serif;
+  font-weight:700;
+  letter-spacing:0.3px;
+  color:var(--accent);
+}
+.muted{ color:var(--muted); margin:4px 0 0; font-size:13px }
+
+/* Titles */
+.page-title{
+  margin:18px 0 16px;
+  font-size:16px;
+  color:#3b2f24;
+  font-weight:700;
+  font-family: 'Merriweather', serif;
+}
+
+/* Form styling */
+.form{ display:block }
+.form-group{ margin-bottom:16px }
+.label-row{ display:flex; justify-content:space-between; align-items:center; margin-bottom:6px }
+label{ font-size:13px; color:#3b2f24; font-weight:700 }
+.forgot{ font-size:13px; color:var(--accent); text-decoration:none }
+
+input[type="text"],
+input[type="email"],
+input[type="password"]{
+  width:100%;
+  padding:12px 14px;
+  border-radius:8px;
+  border:1px solid rgba(80,62,46,0.08);
+  background:linear-gradient(180deg, #fffdfa, #fff7f0);
+  outline:none;
+  transition:box-shadow .15s ease, border-color .15s ease, transform .05s linear;
+  font-size:14px;
+  color:#2b2b2b;
+}
+input::placeholder{ color:#9b8b7a }
+input:focus{
+  box-shadow:0 8px 30px rgba(122,75,42,0.08);
+  border-color:var(--accent);
+  transform:translateY(-1px);
+}
+
+/* Button */
+.btn-primary{
+  display:inline-block;
+  width:100%;
+  padding:12px 16px;
+  margin-top:6px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 8px 24px rgba(122,75,42,0.14);
+  transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+  font-family: 'Merriweather', serif;
+}
+.btn-primary:hover{ transform:translateY(-3px) }
+.btn-primary:active{ transform:translateY(0) }
+
+/* Divider & Signup */
+.divider{ text-align:center; margin:18px 0; position:relative; color:var(--muted); font-size:13px }
+.divider::before, .divider::after{
+  content:"";
+  height:1px;
+  background:rgba(60,44,32,0.06);
+  position:absolute;
+  top:50%;
+  width:36%;
+}
+.divider::before{ left:6% }
+.divider::after{ right:6% }
+
+.signup{ text-align:center; margin-top:6px }
+.link{ color:var(--accent); text-decoration:none; font-weight:700 }
+
+/* Small screens */
+@media (max-width:480px){
+  .card{ padding:20px; border-radius:10px }
+  .hotel-name{ font-size:18px }
+  .page-title{ font-size:15px }
+}
