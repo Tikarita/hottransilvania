@@ -54,302 +54,139 @@ const Cadastro = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-white to-green-50">
-      {/* Header estilo Trivago */}
-      <header className="bg-white border-b border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-green-500 rounded-lg flex items-center justify-center">
-                <Search className="w-6 h-6 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">
-                Hotel Imperium
-              </h1>
-            </div>
-            <Link
-              to="/login"
-              className="text-blue-600 hover:text-blue-700 font-semibold text-sm"
-            >
-              Fazer login
-            </Link>
+    <div className="page">
+      <div className="card" style={{ maxWidth: '680px', width: '100%' }}>
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '6px' }}>
+            <img src="/crown.svg" alt="Imperium" width="24" height="24" />
+            <span style={{ fontWeight: 700, color: '#111827' }}>Hotel Imperium</span>
           </div>
+          <h1 className="heading">Criar conta</h1>
+          <p className="muted">Preencha seus dados para começar</p>
         </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center p-4 py-12">
-        <div className="w-full max-w-3xl animate-fadeIn">
-          {/* Card de Cadastro */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-            {/* Header */}
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                Crie sua conta
-              </h2>
-              <p className="text-gray-600">
-                Preencha os dados abaixo para começar
-              </p>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div style={{ display: 'grid', gap: '16px', gridTemplateColumns: '1fr 1fr' }}>
+            <div style={{ gridColumn: 'span 1' }}>
+              <label>Nome Completo *</label>
+              <input
+                type="text"
+                {...register('nome', {
+                  required: 'Nome é obrigatório',
+                  minLength: { value: 2, message: 'Nome deve ter pelo menos 2 caracteres' },
+                  maxLength: { value: 100, message: 'Nome deve ter no máximo 100 caracteres' }
+                })}
+                className="input"
+                placeholder="Seu nome completo"
+              />
+              {errors.nome && (
+                <p className="muted" style={{ color: '#dc2626', marginTop: '6px' }}>{errors.nome.message}</p>
+              )}
             </div>
-
-            {/* Formulário */}
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {/* Nome */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Nome Completo *
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      {...register('nome', {
-                        required: 'Nome é obrigatório',
-                        minLength: {
-                          value: 2,
-                          message: 'Nome deve ter pelo menos 2 caracteres'
-                        },
-                        maxLength: {
-                          value: 100,
-                          message: 'Nome deve ter no máximo 100 caracteres'
-                        }
-                      })}
-                      className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
-                      placeholder="Seu nome completo"
-                    />
-                  </div>
-                  {errors.nome && (
-                    <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-                      <span>•</span> {errors.nome.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* CPF */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    CPF *
-                  </label>
-                  <div className="relative">
-                    <CreditCard className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      {...register('cpf', {
-                        required: 'CPF é obrigatório',
-                        pattern: {
-                          value: /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
-                          message: 'CPF deve estar no formato 000.000.000-00'
-                        }
-                      })}
-                      onChange={(e) => {
-                        e.target.value = formatCPF(e.target.value)
-                      }}
-                      className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
-                      placeholder="000.000.000-00"
-                    />
-                  </div>
-                  {errors.cpf && (
-                    <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-                      <span>•</span> {errors.cpf.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Email *
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="email"
-                      {...register('email', {
-                        required: 'Email é obrigatório',
-                        pattern: {
-                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                          message: 'Email inválido'
-                        }
-                      })}
-                      className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
-                      placeholder="seu@email.com"
-                    />
-                  </div>
-                  {errors.email && (
-                    <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-                      <span>•</span> {errors.email.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* Telefone */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Telefone
-                  </label>
-                  <div className="relative">
-                    <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      {...register('telefone', {
-                        pattern: {
-                          value: /^\(\d{2}\) \d{4,5}-\d{4}$/,
-                          message: 'Telefone deve estar no formato (00) 0000-0000'
-                        }
-                      })}
-                      onChange={(e) => {
-                        e.target.value = formatPhone(e.target.value)
-                      }}
-                      className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
-                      placeholder="(00) 0000-0000"
-                    />
-                  </div>
-                  {errors.telefone && (
-                    <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-                      <span>•</span> {errors.telefone.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* Endereço */}
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Endereço
-                  </label>
-                  <div className="relative">
-                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      {...register('endereco', {
-                        maxLength: {
-                          value: 50,
-                          message: 'Endereço deve ter no máximo 50 caracteres'
-                        }
-                      })}
-                      className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
-                      placeholder="Rua, número, bairro, cidade"
-                    />
-                  </div>
-                  {errors.endereco && (
-                    <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-                      <span>•</span> {errors.endereco.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* Senha */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Senha *
-                  </label>
-                  <div className="relative">
-                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      {...register('senha', {
-                        required: 'Senha é obrigatória',
-                        minLength: {
-                          value: 6,
-                          message: 'Senha deve ter pelo menos 6 caracteres'
-                        }
-                      })}
-                      className="w-full pl-12 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
-                      placeholder="Mínimo 6 caracteres"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                    >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
-                  </div>
-                  {errors.senha && (
-                    <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-                      <span>•</span> {errors.senha.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* Confirmar Senha */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Confirmar Senha *
-                  </label>
-                  <div className="relative">
-                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      {...register('confirmarSenha', {
-                        required: 'Confirmação de senha é obrigatória',
-                        validate: value => value === password || 'Senhas não coincidem'
-                      })}
-                      className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
-                      placeholder="Confirme sua senha"
-                    />
-                  </div>
-                  {errors.confirmarSenha && (
-                    <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-                      <span>•</span> {errors.confirmarSenha.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Botão de Cadastro */}
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-blue-600 text-white font-semibold py-3.5 px-4 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500/50 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg shadow-blue-500/30 mt-6"
-              >
-                {isLoading ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2"></div>
-                    Criando conta...
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center gap-2">
-                    Criar conta
-                    <ArrowRight className="w-5 h-5" />
-                  </div>
-                )}
-              </button>
-            </form>
-
-            {/* Divisor */}
-            <div className="relative my-8">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-gray-500">ou</span>
-              </div>
+            <div style={{ gridColumn: 'span 1' }}>
+              <label>CPF *</label>
+              <input
+                type="text"
+                {...register('cpf', {
+                  required: 'CPF é obrigatório',
+                  pattern: { value: /^\d{3}\.\d{3}\.\d{3}-\d{2}$/, message: 'CPF deve estar no formato 000.000.000-00' }
+                })}
+                onChange={(e) => { e.target.value = formatCPF(e.target.value) }}
+                className="input"
+                placeholder="000.000.000-00"
+              />
+              {errors.cpf && (
+                <p className="muted" style={{ color: '#dc2626', marginTop: '6px' }}>{errors.cpf.message}</p>
+              )}
             </div>
-
-            {/* Links */}
-            <div className="text-center">
-              <p className="text-gray-600">
-                Já tem uma conta?{' '}
-                <Link
-                  to="/login"
-                  className="font-semibold text-blue-600 hover:text-blue-700 transition-colors inline-flex items-center gap-1"
-                >
-                  Fazer login
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </p>
+            <div style={{ gridColumn: 'span 1' }}>
+              <label>Email *</label>
+              <input
+                type="email"
+                {...register('email', {
+                  required: 'Email é obrigatório',
+                  pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, message: 'Email inválido' }
+                })}
+                className="input"
+                placeholder="seu@email.com"
+              />
+              {errors.email && (
+                <p className="muted" style={{ color: '#dc2626', marginTop: '6px' }}>{errors.email.message}</p>
+              )}
+            </div>
+            <div style={{ gridColumn: 'span 1' }}>
+              <label>Telefone</label>
+              <input
+                type="text"
+                {...register('telefone', { pattern: { value: /^\(\d{2}\) \d{4,5}-\d{4}$/, message: 'Telefone deve estar no formato (00) 0000-0000' } })}
+                onChange={(e) => { e.target.value = formatPhone(e.target.value) }}
+                className="input"
+                placeholder="(00) 0000-0000"
+              />
+              {errors.telefone && (
+                <p className="muted" style={{ color: '#dc2626', marginTop: '6px' }}>{errors.telefone.message}</p>
+              )}
+            </div>
+            <div style={{ gridColumn: 'span 2' }}>
+              <label>Endereço</label>
+              <input
+                type="text"
+                {...register('endereco', { maxLength: { value: 50, message: 'Endereço deve ter no máximo 50 caracteres' } })}
+                className="input"
+                placeholder="Rua, número, bairro, cidade"
+              />
+              {errors.endereco && (
+                <p className="muted" style={{ color: '#dc2626', marginTop: '6px' }}>{errors.endereco.message}</p>
+              )}
+            </div>
+            <div style={{ gridColumn: 'span 1' }}>
+              <label>Senha *</label>
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  {...register('senha', { required: 'Senha é obrigatória', minLength: { value: 6, message: 'Senha deve ter pelo menos 6 caracteres' } })}
+                  className="input"
+                  placeholder="Mínimo 6 caracteres"
+                />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 0, cursor: 'pointer', color: '#6b7280' }}>
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              {errors.senha && (
+                <p className="muted" style={{ color: '#dc2626', marginTop: '6px' }}>{errors.senha.message}</p>
+              )}
+            </div>
+            <div style={{ gridColumn: 'span 1' }}>
+              <label>Confirmar Senha *</label>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                {...register('confirmarSenha', { required: 'Confirmação de senha é obrigatória', validate: value => value === password || 'Senhas não coincidem' })}
+                className="input"
+                placeholder="Confirme sua senha"
+              />
+              {errors.confirmarSenha && (
+                <p className="muted" style={{ color: '#dc2626', marginTop: '6px' }}>{errors.confirmarSenha.message}</p>
+              )}
             </div>
           </div>
-
-          {/* Footer */}
-          <div className="text-center mt-6">
-            <p className="text-gray-500 text-sm">
-              © 2024 Hotel Imperium. Todos os direitos reservados.
-            </p>
-          </div>
+          <button type="submit" disabled={isLoading} className="btn btn-primary" style={{ width: '100%', marginTop: '16px' }}>
+            {isLoading ? (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                <div className="spinner"></div>
+                Criando conta...
+              </div>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                Criar conta
+                <ArrowRight size={18} />
+              </div>
+            )}
+          </button>
+        </form>
+        <div className="divider"></div>
+        <div style={{ textAlign: 'center' }}>
+          <p className="muted">Já tem uma conta? <Link to="/login" className="link">Fazer login</Link></p>
         </div>
-      </main>
+      </div>
     </div>
   )
 }
