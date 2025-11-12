@@ -1,0 +1,35 @@
+services:
+  # Backend API Service
+  - type: web
+    name: hottransilvania-backend
+    env: node
+    region: oregon
+    plan: free
+    rootDir: Backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+
+  # Frontend Static Site
+  - type: static
+    name: hottransilvania-frontend
+    region: oregon
+    plan: free
+    rootDir: Frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Adicione a URL do backend aqui (substitua pela URL real do seu backend no Render)
+      # - key: VITE_API_URL
+      #   value: https://hottransilvania-backend.onrender.com/api
+
