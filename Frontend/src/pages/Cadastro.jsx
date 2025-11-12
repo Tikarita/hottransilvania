@@ -68,72 +68,102 @@ const Cadastro = () => {
           <div style={{ display: 'grid', gap: '16px', gridTemplateColumns: '1fr 1fr' }}>
             <div style={{ gridColumn: 'span 1' }}>
               <label>Nome Completo *</label>
-              <input
-                type="text"
-                {...register('nome', {
-                  required: 'Nome é obrigatório',
-                  minLength: { value: 2, message: 'Nome deve ter pelo menos 2 caracteres' },
-                  maxLength: { value: 100, message: 'Nome deve ter no máximo 100 caracteres' }
-                })}
-                className="input"
-                placeholder="Seu nome completo"
-              />
+              <div style={{ position: 'relative' }}>
+                <div style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}>
+                  <User size={18} />
+                </div>
+                <input
+                  type="text"
+                  {...register('nome', {
+                    required: 'Nome é obrigatório',
+                    minLength: { value: 2, message: 'Nome deve ter pelo menos 2 caracteres' },
+                    maxLength: { value: 100, message: 'Nome deve ter no máximo 100 caracteres' }
+                  })}
+                  className="input"
+                  style={{ paddingLeft: 40 }}
+                  placeholder="Seu nome completo"
+                />
+              </div>
               {errors.nome && (
                 <p className="muted" style={{ color: '#dc2626', marginTop: '6px' }}>{errors.nome.message}</p>
               )}
             </div>
             <div style={{ gridColumn: 'span 1' }}>
               <label>CPF *</label>
-              <input
-                type="text"
-                {...register('cpf', {
-                  required: 'CPF é obrigatório',
-                  pattern: { value: /^\d{3}\.\d{3}\.\d{3}-\d{2}$/, message: 'CPF deve estar no formato 000.000.000-00' }
-                })}
-                onChange={(e) => { e.target.value = formatCPF(e.target.value) }}
-                className="input"
-                placeholder="000.000.000-00"
-              />
+              <div style={{ position: 'relative' }}>
+                <div style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}>
+                  <CreditCard size={18} />
+                </div>
+                <input
+                  type="text"
+                  {...register('cpf', {
+                    required: 'CPF é obrigatório',
+                    pattern: { value: /^\d{3}\.\d{3}\.\d{3}-\d{2}$/, message: 'CPF deve estar no formato 000.000.000-00' }
+                  })}
+                  onChange={(e) => { e.target.value = formatCPF(e.target.value) }}
+                  className="input"
+                  style={{ paddingLeft: 40 }}
+                  placeholder="000.000.000-00"
+                />
+              </div>
               {errors.cpf && (
                 <p className="muted" style={{ color: '#dc2626', marginTop: '6px' }}>{errors.cpf.message}</p>
               )}
             </div>
             <div style={{ gridColumn: 'span 1' }}>
               <label>Email *</label>
-              <input
-                type="email"
-                {...register('email', {
-                  required: 'Email é obrigatório',
-                  pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, message: 'Email inválido' }
-                })}
-                className="input"
-                placeholder="seu@email.com"
-              />
+              <div style={{ position: 'relative' }}>
+                <div style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}>
+                  <Mail size={18} />
+                </div>
+                <input
+                  type="email"
+                  {...register('email', {
+                    required: 'Email é obrigatório',
+                    pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, message: 'Email inválido' }
+                  })}
+                  className="input"
+                  style={{ paddingLeft: 40 }}
+                  placeholder="seu@email.com"
+                />
+              </div>
               {errors.email && (
                 <p className="muted" style={{ color: '#dc2626', marginTop: '6px' }}>{errors.email.message}</p>
               )}
             </div>
             <div style={{ gridColumn: 'span 1' }}>
               <label>Telefone</label>
-              <input
-                type="text"
-                {...register('telefone', { pattern: { value: /^\(\d{2}\) \d{4,5}-\d{4}$/, message: 'Telefone deve estar no formato (00) 0000-0000' } })}
-                onChange={(e) => { e.target.value = formatPhone(e.target.value) }}
-                className="input"
-                placeholder="(00) 0000-0000"
-              />
+              <div style={{ position: 'relative' }}>
+                <div style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}>
+                  <Phone size={18} />
+                </div>
+                <input
+                  type="text"
+                  {...register('telefone', { pattern: { value: /^\(\d{2}\) \d{4,5}-\d{4}$/, message: 'Telefone deve estar no formato (00) 0000-0000' } })}
+                  onChange={(e) => { e.target.value = formatPhone(e.target.value) }}
+                  className="input"
+                  style={{ paddingLeft: 40 }}
+                  placeholder="(00) 0000-0000"
+                />
+              </div>
               {errors.telefone && (
                 <p className="muted" style={{ color: '#dc2626', marginTop: '6px' }}>{errors.telefone.message}</p>
               )}
             </div>
             <div style={{ gridColumn: 'span 2' }}>
               <label>Endereço</label>
-              <input
-                type="text"
-                {...register('endereco', { maxLength: { value: 50, message: 'Endereço deve ter no máximo 50 caracteres' } })}
-                className="input"
-                placeholder="Rua, número, bairro, cidade"
-              />
+              <div style={{ position: 'relative' }}>
+                <div style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}>
+                  <MapPin size={18} />
+                </div>
+                <input
+                  type="text"
+                  {...register('endereco', { maxLength: { value: 50, message: 'Endereço deve ter no máximo 50 caracteres' } })}
+                  className="input"
+                  style={{ paddingLeft: 40 }}
+                  placeholder="Rua, número, bairro, cidade"
+                />
+              </div>
               {errors.endereco && (
                 <p className="muted" style={{ color: '#dc2626', marginTop: '6px' }}>{errors.endereco.message}</p>
               )}
@@ -141,10 +171,14 @@ const Cadastro = () => {
             <div style={{ gridColumn: 'span 1' }}>
               <label>Senha *</label>
               <div style={{ position: 'relative' }}>
+                <div style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}>
+                  <Lock size={18} />
+                </div>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   {...register('senha', { required: 'Senha é obrigatória', minLength: { value: 6, message: 'Senha deve ter pelo menos 6 caracteres' } })}
                   className="input"
+                  style={{ paddingLeft: 40 }}
                   placeholder="Mínimo 6 caracteres"
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 0, cursor: 'pointer', color: '#6b7280' }}>
@@ -157,12 +191,18 @@ const Cadastro = () => {
             </div>
             <div style={{ gridColumn: 'span 1' }}>
               <label>Confirmar Senha *</label>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                {...register('confirmarSenha', { required: 'Confirmação de senha é obrigatória', validate: value => value === password || 'Senhas não coincidem' })}
-                className="input"
-                placeholder="Confirme sua senha"
-              />
+              <div style={{ position: 'relative' }}>
+                <div style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}>
+                  <Lock size={18} />
+                </div>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  {...register('confirmarSenha', { required: 'Confirmação de senha é obrigatória', validate: value => value === password || 'Senhas não coincidem' })}
+                  className="input"
+                  style={{ paddingLeft: 40 }}
+                  placeholder="Confirme sua senha"
+                />
+              </div>
               {errors.confirmarSenha && (
                 <p className="muted" style={{ color: '#dc2626', marginTop: '6px' }}>{errors.confirmarSenha.message}</p>
               )}

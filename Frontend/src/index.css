@@ -57,6 +57,36 @@ body {
   min-height: 100vh;
 }
 
+/* Layout base */
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--bg-secondary);
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(17, 24, 39, 0.06) 0%, transparent 50%);
+}
+
+.heading {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  letter-spacing: 0.01em;
+}
+
+.muted {
+  color: var(--gray-500);
+  font-size: 0.95rem;
+}
+
+.divider {
+  margin-top: 20px;
+  border-top: 1px solid var(--gray-200);
+}
+
 #root {
   min-height: 100vh;
   display: flex;

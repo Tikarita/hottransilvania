@@ -49,6 +49,9 @@ const Login = () => {
             <div>
               <label>Email</label>
               <div style={{ position: 'relative' }}>
+                <div style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}>
+                  <Mail size={18} />
+                </div>
                 <input
                   type="email"
                   {...register('email', {
@@ -59,6 +62,7 @@ const Login = () => {
                     }
                   })}
                   className="input"
+                  style={{ paddingLeft: 40 }}
                   placeholder="seu@email.com"
                 />
               </div>
@@ -69,6 +73,9 @@ const Login = () => {
             <div>
               <label>Senha</label>
               <div style={{ position: 'relative' }}>
+                <div style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}>
+                  <Lock size={18} />
+                </div>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   {...register('senha', {
@@ -76,6 +83,7 @@ const Login = () => {
                     minLength: { value: 6, message: 'Senha deve ter pelo menos 6 caracteres' }
                   })}
                   className="input"
+                  style={{ paddingLeft: 40 }}
                   placeholder="Sua senha"
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 0, cursor: 'pointer', color: '#6b7280' }}>
