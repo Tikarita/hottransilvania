@@ -11,14 +11,12 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      # PORT é definido automaticamente pelo Render, não precisa configurar
-      # Adicione suas variáveis do Supabase aqui ou configure no dashboard do Render
-      # - key: SUPABASE_URL
-      #   sync: false
-      # - key: SUPABASE_ANON_KEY
-      #   sync: false
-      # - key: DATABASE_URL
-      #   sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
 
   # Frontend Static Site
   - type: static
